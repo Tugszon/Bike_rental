@@ -6,9 +6,10 @@ import os
 def rent_bike(customer_name:str, rental_duration:int):
     price = calculate_cost(rental_duration)
     rental = {
-            "Imię" : customer_name,
+            customer_name :{
             "długość wynajmu" : rental_duration,
             "cena" : price
+            }
         }
     save_rental(rental)
 
@@ -16,8 +17,8 @@ def calculate_cost(rental_duration:int) ->str:
     return f"{10+(rental_duration-1)*5}zł"
 
 def save_rental(rental:dict):
-    with open("data/rentals.json", "w", encoding="utf-8") as f:
-        json.dump(rental, f, ensure_ascii=False)
+    with open("data/rentals.json", "a+", encoding="utf-8") as f:
+       json.dump(rental, f, ensure_ascii=False)
 
 # def load_rentals():
 #     None
