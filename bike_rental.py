@@ -3,6 +3,8 @@ import datetime
 import smtplib
 import os
 
+history = {}
+
 def rent_bike(customer_name:str, rental_duration:int) ->dict:
     price = calculate_cost(rental_duration)
     rental = {
@@ -11,6 +13,14 @@ def rent_bike(customer_name:str, rental_duration:int) ->dict:
             "cena" : price
             }
         }
+    rentalh = {
+            customer_name :{
+                "długość wynajmu" : rental_duration,
+                "cena" : price,
+                "Status" : "Dodano"
+                } 
+        }
+    history.update(rentalh)
     save_rental(rental)
 
 def calculate_cost(rental_duration:int) ->str:
@@ -37,6 +47,12 @@ def cancel_rental(customer_name:str) ->dict:
     with open("data/rentals.json", encoding="utf-8") as f:
             data = json.load(f)
     if customer_name in data:
+        cancelh = {
+                customer_name : {
+                    "status" : "Anulowano"
+                    }
+            }
+        history.update(cancelh)
         del data[customer_name]
         print("Rezerwacja została pomyślnie anulowana")
         with open("data/rentals.json", "w", encoding="utf-8") as f:
@@ -47,8 +63,10 @@ def cancel_rental(customer_name:str) ->dict:
 # def send_rental_invoice_email(customer_email, rental_details):
 #     None
 
-# def generate_daily_report():
-#     None
+def generate_daily_report():
+    current_date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    with open(f"data/daily_report_{current_date}.json", "w", encoding="utf-8") as f:
+        json.dump(history, f, ensure_ascii=False)
 
 def main(n):
     while n != "exit":
@@ -72,5 +90,8 @@ def main(n):
                     print("Obecnie nie ma żadnych rezerwacji")
             case _:
                 print("Podaj odpowiednią instrukcję")
+    else:
+        print("Dowidzenia")
+        generate_daily_report()
 
 main(0)
