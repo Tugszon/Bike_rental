@@ -16,7 +16,8 @@ def calculate_cost(rental_duration:int) ->str:
     return f"{10+(rental_duration-1)*5}zł"
 
 def save_rental(rental:dict):
-    None
+    with open("data/rentals.json", "w", encoding="utf-8") as f:
+        json.dump(rental, f, ensure_ascii=False)
 
 # def load_rentals():
 #     None
@@ -35,7 +36,15 @@ def main(n):
         n = str(input("podaj co chcesz zrobić: "))
         match n:
             case "rent":
-                customer_name = input("podaj imię klienta: ")
+                rental_duraction = int(input("Ilość godzin: "))
+                if rental_duraction == 0:
+                    print("Podaj odpowiedznią ilość godzin")
+                    n = "rent"
+                else:
+                    customer_name = str(input("podaj imię klienta: "))
+                    rent_bike(customer_name, rental_duraction)
+                
+
             case _:
                 print("Podaj odpowiednią instrukcję")
 
