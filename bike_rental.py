@@ -17,11 +17,21 @@ def calculate_cost(rental_duration:int) ->str:
     return f"{10+(rental_duration-1)*5}zł"
 
 def save_rental(rental:dict):
-    with open("data/rentals.json", "a+", encoding="utf-8") as f:
-       json.dump(rental, f, ensure_ascii=False)
+    if os.path.exists("data/rentals.json"):
+        with open("data/rentals.json", encoding="utf-8") as f:
+            data = json.load(f)
 
-# def load_rentals():
-#     None
+        data.update(rental)
+        with open("data/rentals.json", "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False)
+
+    else:
+        with open("data/rentals.json", "w", encoding="utf-8") as f:
+            json.dump(rental, f, ensure_ascii=False)
+
+def load_rentals():
+    with open ("data/rentals.json", encoding="utf-8") as f:
+        print(json.load(f))
 
 # def cancel_rental(customer_name):
 #     None
@@ -44,7 +54,8 @@ def main(n):
                 else:
                     customer_name = str(input("podaj imię klienta: "))
                     rent_bike(customer_name, rental_duraction)
-                
+            case "load":
+                load_rentals()
 
             case _:
                 print("Podaj odpowiednią instrukcję")
