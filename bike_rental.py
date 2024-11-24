@@ -5,7 +5,7 @@ import os
 
 # def rent_bike(customer_name:str, rental_duration:int):
 
-def calculate_cost(rental_duration):
+def calculate_cost(rental_duration:int) ->str:
     return f"{10+(rental_duration-1)*5}zł"
 
 # def save_rental(rental):
@@ -23,8 +23,13 @@ def calculate_cost(rental_duration):
 # def generate_daily_report():
 #     None
 
-# def main():
-#     n = str(input("Podaj co chcesz zrobić"))
-#     match n != "exit":
-#         case "rent":
-#             customer_name = input("Podaj imię klienta: ")
+def main(n):
+    while n != "exit":
+        n = str(input("podaj co chcesz zrobić: "))
+        match n:
+            case "rent":
+                customer_name = input("podaj imię klienta: ")
+            case _:
+                print("Podaj odpowiednią instrukcję")
+
+main(0)
