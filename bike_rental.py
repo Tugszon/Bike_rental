@@ -27,6 +27,7 @@ def rent_bike(customer_name:str, rental_duration:int) ->dict:
 def calculate_cost(rental_duration:int) ->str:
     return f"{10+(rental_duration-1)*5}zł"
 
+
 def save_rental(rental:dict) ->dict:
     if os.path.exists("data/rentals.json"):
         with open("data/rentals.json", encoding="utf-8") as f:
