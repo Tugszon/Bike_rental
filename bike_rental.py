@@ -22,6 +22,7 @@ def rent_bike(customer_name:str, rental_duration:int) ->dict:
         }
     history.update(rentalh)
     save_rental(rental)
+    return f"Dziękujemu {customer_name} za zarezerwowanie roweru na {rental_duration} godzin."
 
 def calculate_cost(rental_duration:int) ->str:
     return f"{10+(rental_duration-1)*5}zł"
@@ -60,8 +61,20 @@ def cancel_rental(customer_name:str) ->dict:
     else:
         print("Podana rezerwacja nie istnieje")
     
-# def send_rental_invoice_email(customer_email, rental_details):
-#     None
+def send_rental_invoice_email(customer_email:str, rental_details:str):
+    from email.message import EmailMessage
+
+    msg= EmailMessage()
+    msg.set_content("Dokonano rezerwacji")
+    msg["Subject"]="Rental Bike"
+    msg["From"]="Rental Bike Corporation"
+    msg["To"]=""
+
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login("", "")
+    server.send_message(msg)
+    server.quit
 
 def generate_daily_report():
     current_date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -76,10 +89,11 @@ def main(n):
                 rental_duraction = int(input("Ilość godzin: "))
                 if rental_duraction == 0:
                     print("Podaj odpowiedznią ilość godzin")
-                    n = "rent"
                 else:
                     customer_name = str(input("podaj imię klienta: "))
-                    rent_bike(customer_name, rental_duraction)
+                    customer_email = str(input("Podaj Email: "))
+                    rental_details = rent_bike(customer_name, rental_duraction)
+                    send_rental_invoice_email(customer_email,rental_details)
             case "load":
                 load_rentals()
             case "cancel":
